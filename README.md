@@ -1,15 +1,22 @@
 # Curso Full Stack Developer
 
-Esta es la primera iteración. Permite mostrar una lista (fea) de conferencias a una charla. Tiene los siguientes componentes
+En la segunda iteración, nos dimos cuenta de algunas cosas
 
-- TalksService: es un servicio que devuelve una lista de charlas hardcodeadas en formato JSON. No existe la charla como objeto sino que es un mapa de atributos y valores.
-- Componentes por defecto que se generan haciendo 
+- la lista se ve horrible (jeje). Para eso agregamos Material UI Design que nos ayudará a maquetar la aplicación.
 
 ```bash
-create-react-app xxxxxx
+npm install -save material-ui
 ```
 
-donde xxxxxx es el nombre del proyecto a crear.
+- ListView es un nombre muy genérico, está mostrando siempre charlas. Debemos cambiar ese nombre para adaptarlo a un componente menos general. Después de todo es nuestra primera incursión en React, no es justo que nos obliguen a modelar componentes genéricos.
 
-- ListView: es nuestro componente que muestra la lista de charlas, por el momento de un modo muy tosco.
+# Cómo mejorar el look & feel
+
+Una vez instalado material-ui tenemos una página que nos cuenta muy bien cómo usarlo:
+
+http://www.material-ui.com
+
+* Para que funcione debemos definir un _Theme_ ([acá te cuenta cómo definirlo](http://www.material-ui.com/#/customization/themes))
+
+* En particular cada película la queremos mostrar como una _Card_, eso se puede ver en [esta página](http://www.material-ui.com/#/components/card) (hay que hacer click sobre los símbolos ```<>``` para ver el código)
 
