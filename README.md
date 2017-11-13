@@ -36,4 +36,4 @@ http://www.material-ui.com
 
 ## Diagrama de la arquitectura
 
-![](images/Iteración 2.png)
+![](images/Iteracion2.png)
