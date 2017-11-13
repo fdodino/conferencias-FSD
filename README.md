@@ -1,5 +1,5 @@
 <img src="images/license.png"
-    width="50%" height="50%">
+    width="30%" height="30%">
 
 # Curso Full Stack Developer
 
