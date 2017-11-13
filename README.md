@@ -36,4 +36,4 @@ http://www.material-ui.com
 
 ## Diagrama de la arquitectura
 
-TODO
+![](images/Itearación 2.png)
