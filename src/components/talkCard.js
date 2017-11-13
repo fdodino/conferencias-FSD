@@ -8,7 +8,8 @@ import Avatar from 'material-ui/Avatar'
 import Chip from 'material-ui/Chip'
 import {blue300, indigo900} from 'material-ui/styles/colors'
 
-export default class TalkCard extends Component {
+
+export class TalkCard extends Component {
     componentWillMount() {
         this.talk = this.props.talk
     }
@@ -18,14 +19,9 @@ export default class TalkCard extends Component {
             <Card>
                 <CardTitle title={ this.talk.title } subtitle={ this.talk.author }/>
                 <div align="center">
-                    <Chip
-                        backgroundColor={blue300}
-                    >
-                        <Avatar color={blue300} backgroundColor={indigo900}>
-                            ?
-                        </Avatar>
-                        { this.talk.room  }
-                    </Chip>
+                    <RoomComponent 
+                        room={this.talk.room}
+                    />
                 </div>
                 <CardText>
                 </CardText>
@@ -33,4 +29,19 @@ export default class TalkCard extends Component {
         )
     }
     
+}
+
+export class RoomComponent extends Component {
+    render() {
+        return (
+            <Chip
+            backgroundColor={blue300}
+            >
+                <Avatar color={blue300} backgroundColor={indigo900}>
+                    ?
+                </Avatar>
+                { this.props.room  }
+            </Chip>
+        )
+    }
 }
