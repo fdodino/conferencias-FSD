@@ -1,3 +1,6 @@
+<img src="images/license.png"
+    width="30%" height="30%">
+
 # Curso Full Stack Developer
 
 ## Segunda iteración: Look & Feel mejorado
