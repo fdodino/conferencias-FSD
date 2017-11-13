@@ -20,4 +20,9 @@ export default class TalksService {
     findAll() {
         return this.talks
     }
+
+    filter(value) {
+        return this.talks.filter( talk => talk.author.toUpperCase().includes(value.toUpperCase()) || talk.title.toUpperCase().includes(value.toUpperCase()) )
+    }
+
 }

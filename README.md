@@ -3,40 +3,21 @@
 
 # Curso Full Stack Developer
 
-## Segunda iteración: Look & Feel mejorado
+## Tercera iteración: Props vs. State
 
-Nos dimos cuenta de algunas cosas
+En esta iteración ingresamos un filtro de búsqueda. De esa manera debemos diferenciar
 
-- la lista se ve horrible (jeje). Para eso agregamos Material UI Design que nos ayudará a maquetar la aplicación.
+- **props** o properties, que utilizamos para pasar información entre componentes
+- **state**, el estado que cada vez que se modifica regenera los componentes relacionados
 
-```bash
-npm install -save material-ui
-```
 
-- ListView es un nombre muy genérico, está mostrando siempre charlas. Debemos cambiar ese nombre para adaptarlo a un componente más específico. Después de todo es nuestra primera incursión en React, ya tendremos tiempo para generar componentes extensibles.
+> En nuestro caso tenemos como state el valor de la búsqueda ingresada y las charlas encontradas con ese criterio. El evento onChange del texto dispara el cambio del estado, lo que hace refrescar la lista. Esto ocurre en un nuevo componente **TalksSearch**. La información que le pasa al componente TalksList (que genera la lista de charlas) se hace por medio de propiedades.
 
-## Cambios en el diseño: componentes de React propios
-
-- **TalksList**: muestra una lista de charlas, delega en
-- **TalkCard**: muestra una charla (con poca información por el momento), y para mostrar la sala utiliza un tercer componente:
-- **RoomComponent**: muestra los datos de la sala
-
-## Agregados de look & feel
-
-Una vez instalado material-ui tenemos una página que nos cuenta muy bien cómo usarlo:
-
-http://www.material-ui.com
-
-* Para que funcione debemos definir un _Theme_ ([acá te cuenta cómo definirlo](http://www.material-ui.com/#/customization/themes))
-
-* En particular cada película la queremos mostrar como una _Card_, eso se puede ver en [esta página](http://www.material-ui.com/#/components/card) (hay que hacer click sobre los símbolos ```<>``` para ver el código)
-
-* Para mostrar la sala donde ocurre la charla, utilizamos el componente [Chip](http://www.material-ui.com/#/components/chip)
 
 ## Demo
 
-![](images/demo.png)
+![](images/demo.gif)
 
 ## Diagrama de la arquitectura
 
-![](images/Iteracion2.png)
+![](images/iteracion3.png)

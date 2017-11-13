@@ -14,4 +14,5 @@ export default class TalksList extends Component {
             )
         )
     }
+
 }
