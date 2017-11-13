@@ -26,7 +26,7 @@ export default class TalksSearch extends Component {
             <div>
                 <TextField 
                     value={ this.state.searchValue } 
-                    onChange={ this.handleChange.bind(this) } 
+                    onChange={ this.searchTalks.bind(this) } 
                     hintText="Valor a buscar..."
                 />
                 <TalksList items={this.state.talks}/>
@@ -34,7 +34,7 @@ export default class TalksSearch extends Component {
         )
     }
 
-    handleChange(e) {
+    searchTalks(e) {
         const searchValue = e.target.value
         this.setState({ 
             searchValue: searchValue ,
