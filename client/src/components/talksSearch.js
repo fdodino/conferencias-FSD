@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField'
 
 // Custom UI Components
 import TalksList from "./talksList"
+import ErrorMessage from "./errorMessage"
 
 // Custom Services
 import TalksService from "../services/talksService"
@@ -17,13 +18,17 @@ export default class TalksSearch extends Component {
         super(props)
         this.state = {
             searchValue: "",
-            talks: []
+            talks: [],
+            errorMessage: ""
         }
     }
 
     render() {
         return (
             <div>
+                <ErrorMessage
+                    message={this.state.errorMessage}
+                />
                 <TextField 
                     value={ this.state.searchValue } 
                     onChange={ this.searchTalks.bind(this) } 
@@ -37,17 +42,28 @@ export default class TalksSearch extends Component {
     searchTalks(e) {
         const searchValue = e.target.value
         talksService.filter(searchValue)
-            .then(response => response.json() )
+            .then(response => {
+                if (response.ok) {
+                    return response.json() 
+                } else { 
+                    throw Error(response.status + " (" + response.statusText + ")")
+                }
+            })
             .then(talks => {
+                console.log(talks)
                 this.setState({ 
                     searchValue: searchValue ,
-                    talks: talks
+                    talks: talks,
+                    errorMessage: ""
                 })
             })
-            .catch(err => this.setState({ 
-                searchValue: searchValue ,
-                talks: []
-            }))
-        }
+            .catch((err) => {
+                this.setState({ 
+                    searchValue: searchValue ,
+                    talks: [],
+                    errorMessage: "No se pudo obtener las charlas. Error: " + err.message
+                })
+            })
+    }
 
 }
