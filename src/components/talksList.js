@@ -4,7 +4,6 @@ import { TalkCard } from './talkCard'
 export default class TalksList extends Component {
     constructor(props) {
         super(props)
-        this.items = this.props.items
     }
 
     render() {
