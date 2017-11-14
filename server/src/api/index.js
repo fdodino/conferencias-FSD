@@ -1,6 +1,6 @@
 import { version } from '../../package.json'
 import { Router } from 'express'
-import TalkService from "../services/talkServices"
+import TalkService from "../services/talkService"
 
 const talkService = new TalkService()
 
