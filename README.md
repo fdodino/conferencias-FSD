@@ -5,7 +5,7 @@
 
 ## Sexta iteración: persistencia con Firebase
 
-Hasta el momento nuestra aplicación no tiene persistencia: cada vez que levantamos el servidor NodeJS se crean los datos de las charlas y al detenerse el servidor se destruyen los objetos que estaban en la memoria de nuestro application server. Vamos a agregarle ahora a las charlas la propiedad de persistirse en un esquema de base de datos, en principio en la nube, a través del servicio **Firebase**.
+Hasta el momento nuestra aplicación no tiene persistencia: cada vez que levantamos el servidor NodeJS se crean los datos de las charlas y al detenerse el servidor se destruyen los objetos que están en la memoria de nuestro application server. Vamos a agregarle ahora a las charlas la propiedad de persistirse en un esquema de base de datos, en principio en la nube, a través del servicio **Firebase**.
 
 ## Configuración de Firebase
 
@@ -23,6 +23,14 @@ En Database, Datos creamos dentro del proyecto la colección "talks":
 
 ![](images/firebaseConfguration1.png)
 
+## Autenticación desactivada (solo para empezar a jugar)
+
+Inicialmente en la solapa Reglas vamos a desactivar el login requerido para poder guardar o recolectar información:
+
+![](images/firebaseConfiguration2.png)
+
+> Por supuesto que desaconsejamos esta configuración, pero para comenzar nos permitirá concentrarnos en generar la información correctamente.
+
 ## Configuración del proyecto server
 
 Agregamos la dependencia a Firebase en el proyecto server.
@@ -30,14 +38,6 @@ Agregamos la dependencia a Firebase en el proyecto server.
 ```bash
 npm install firebase --save
 ```
-
-## Autenticación desactivada (solo para empezar a jugar)
-
-Inicialmente en la solapa Reglas vamos a desactivar el login requerido para poder guardar o recolectar información:
-
-![](images/firebaseConfguration2.png)
-
-> Por supuesto que desaconsejamos esta configuración, pero para comenzar nos permitirá concentrarnos en generar la información correctamente.
 
 ## Carga de datos iniciales
 
@@ -51,13 +51,6 @@ node dist/services/initData
 TODO: Ver por qué no libera el control
 
 ![](images/TalksInsertedInFirebase.png)
-
-## Node monitor (TODO)
-También empezaremos a utilizar **nodemon**, que es un componente que nos permite que el server node se reinicie automáticamente cada vez que hacemos un cambio sobre los archivos que están alojados en el server. En el archivo package.json ya estaba configurado, para activarlo en lugar de ejecutar el server con npm start lo vamos a hacer en modo desarrollo:
-
-```bash
-$ npm dev
-```
 
 ## Cache de las charlas
 
@@ -90,7 +83,6 @@ export default class TalksService {
 Periódicamente, la aplicación de Node busca la información de la colección "talks" y la sincroniza. Por el momento, sabemos que no hay escrituras, entonces nos alcanza con una estrategia muy básica 
 
 Fíjense que hasta el momento venimos manejando las charlas como un simple JSON, sin comportamiento. Esto es simple y cómodo, aunque ya empieza a costarnos líneas en el service, que debe desagregar la información que recibe para construir el objeto charla que va a estar en la cache, por ejemplo para poder agregarle el id contra el cual buscar.
-
 
 
 ## Diagrama de arquitectura
