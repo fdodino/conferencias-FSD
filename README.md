@@ -14,7 +14,6 @@ Empezamos a utilizar [nodemon](https://nodemon.io/), que es una utilidad que nos
     "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "nodemon dist",
-    ...
 ```
 
 ## Diagrama de arquitectura
@@ -86,11 +85,34 @@ export default class TalksService {
 
 - a su vez, aparece un nuevo endpoint: un método POST a la URL /api/talks donde recibimos en el body un JSON. El procesamiento en sí lo delegamos a talkService, pero además devolvemos un JSON con la respuesta (se dio de alta ok o se produjeron los siguientes errores)
 
+```javascript
+	api.post('/talks', (req, res) => {
+		const processedTalk = talkService.insert(req.body)
+		console.log("Processed talk", processedTalk)
+		res.json(processResultFor(processedTalk))
+	})
+```
+
+Pero ¿quién entiende processResultFor? No hay objeto , lo que refuerza la naturaleza híbrida de ECMA Script:
+
+```javascript
+function processResultFor(element) {
+	return {
+		"status": "processed",
+		"statusOk": element.ok,
+		"statusMessage": element.errors 
+	}
+}
+```
+
+es una función "sin dueño".
+
+
 ## Prueba desde un cliente REST
 
 En nuestro caso utilizamos [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop), pero pueden usar Advanced REST Client o cualquier otra aplicación que dispare pedidos REST hacia nuestro server node. Es importante respetar:
 
-- el método debe ser POST
+- que el método sea POST
 - la URL http://localhost:3001/api/talks
 - en el BODY deben configurar el content-type como JSON (de otra manera no va a reconocerlo el body-parser que es el componente en node) y escribir el JSON con los valores para title, author y room
 
