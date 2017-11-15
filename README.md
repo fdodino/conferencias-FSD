@@ -82,39 +82,19 @@ export default class TalksService {
 
 Periódicamente, la aplicación de Node busca la información de la colección "talks" y la sincroniza. Por el momento, sabemos que no hay escrituras, entonces nos alcanza con una estrategia muy básica 
 
-Fíjense que hasta el momento venimos manejando las charlas como un simple JSON, sin comportamiento. Esto es simple y cómodo, aunque ya empieza a costarnos líneas en el service, que debe desagregar la información que recibe para construir el objeto charla que va a estar en la cache, por ejemplo para poder agregarle el id contra el cual buscar.
+Fíjense que hasta el momento venimos manejando las charlas como un simple JSON, sin comportamiento. Esto es simple y cómodo, aunque ya empieza a costarnos líneas en el service, que debe desagregar la información que recibe para construir el objeto charla que va a estar en la cache.
 
+La cache además permite mantener la búsqueda por título o autor, algo que [Firebase no trae ya que está pensado para hacer consultas rápidas por clave](https://firebase.google.com/docs/database/admin/retrieve-data?hl=es-419). 
 
 ## Diagrama de arquitectura
 
 ![](images/iteracion6.png)
 
-Tenemos los siguientes cambios:
+En el lado cliente no hay cambios. Del lado del server tenemos algunos cambios: 
 
-- hay un nuevo componente ReactJS para mostrar errores (basado en el componente [SnackBar](http://www.material-ui.com/#/components/snackbar) de Material UI)
-- cuando disparamos la búsqueda desde el cliente hacia el server, usamos el mensaje _fetch_ que lamentablemente no maneja los errores de http distintos de 200 (OK), entonces debemos hacer esto nosotros manualmente. A futuro podríamos generar una nueva abstracción para no tener que agregar el if en cada componente que dependa de una llamada asincrónica.
-- si la respuesta devuelve un código de error (!response.ok) forzamos un error para entrar en el último bloque catch de las promises (nunca llegamos a actualizar el estado de las charlas)
-
-```javascript
-    searchTalks(e) {
-        const searchValue = e.target.value
-        talksService.filter(searchValue)
-            .then(response => {
-                if (response.ok) {
-                    return response.json() 
-                } else { 
-                    throw Error(response.status + " (" + response.statusText + ")")
-                }
-            })
-            .then(...)
-            .catch((err) => {
-                this.setState({ 
-                    searchValue: searchValue ,
-                    talks: [],
-                    errorMessage: "No se pudo obtener las charlas. Error: " + err.message
-                })
-            })
-```
+- configDB nos permite conectarnos contra la base Firebase y devuelve la referencia a la instancia de la colección talks. 
+- la inicialización de los datos se hace en un archivo aparte (_initData.js_) cuya explicación se hizo más arriba
+- y por último talkService mantiene una cache así como la sincronización de los datos con Firebase.
 
 ## Demo
 
