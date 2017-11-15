@@ -90,15 +90,15 @@ La cache además permite mantener la búsqueda por título o autor, algo que [Fi
 
 ![](images/iteracion6.png)
 
-En el lado cliente no hay cambios. Del lado del server tenemos algunos cambios: 
+En el lado cliente no hay modificaciones. Del lado del server tenemos algunos cambios: 
 
-- configDB nos permite conectarnos contra la base Firebase y devuelve la referencia a la instancia de la colección talks. 
-- la inicialización de los datos se hace en un archivo aparte (_initData.js_) cuya explicación se hizo más arriba
+- configDB nos permite conectarnos contra la base Firebase y devuelve la referencia a la instancia de la colección _talks_. 
+- la inicialización de los datos se hace en un archivo aparte (_initData.js_) como explicamos arriba
 - y por último talkService mantiene una cache así como la sincronización de los datos con Firebase.
 
 ## Demo
 
-En la demo vemos cómo responde la aplicación cuando la URL cambió (error 404: Not Found) el server está caído (error 500: Internal Server Error)
+En la demo vemos cómo al modificar información en Firebase eso se ve directamente reflejado en las consultas desde nuestra aplicación en ReactJS:
 
 ![](images/demo.gif)
 
