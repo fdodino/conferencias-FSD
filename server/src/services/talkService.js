@@ -1,4 +1,5 @@
 import db from "./configDb"
+import Talk from "../models/talk"
 
 export default class TalksService {
     
@@ -8,12 +9,9 @@ export default class TalksService {
             this.db.on("value", snap => {
                 this.talks = []
                 snap.forEach(snapTalk => {
-                    const newTalk = { id: snapTalk.key }
-                    const talk = snapTalk.val()
-                    newTalk.author = talk.author
-                    newTalk.title = talk.title
-                    newTalk.room = talk.room
-                    this.talks.push(newTalk)
+                    const talk = new Talk(snapTalk.val())
+                    talk.id = snapTalk.key
+                    this.talks.push(talk)
                 })
             })
         }
@@ -26,4 +24,12 @@ export default class TalksService {
             return this.talks.filter( talk => talk.author.toUpperCase().includes(value.toUpperCase()) || talk.title.toUpperCase().includes(value.toUpperCase()) )
         }
 
+        insert(talkJSON) {
+            const talk = new Talk(talkJSON)
+            talk.validate()
+            if (talk.ok) {
+                this.db.push(talk)
+            }
+            return talk
+        }
     }
