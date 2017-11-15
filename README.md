@@ -3,13 +3,99 @@
 
 # Curso Full Stack Developer
 
-## Quinta iteración: manejo de errores
+## Sexta iteración: persistencia con Firebase
 
-Si nosotros detenemos el proyecto NodeJS que corresponde al servidor, la aplicación ReactJS no muestra ningún mensaje de error: simplemente cualquier búsqueda no devuelve resultados. Esto puede resultar contraproducente para el usuario, vamos a incorporar el manejo básico de errores en la comunicación entre cliente y servidor. 
+Hasta el momento nuestra aplicación no tiene persistencia: cada vez que levantamos el servidor NodeJS se crean los datos de las charlas y al detenerse el servidor se destruyen los objetos que estaban en la memoria de nuestro application server. Vamos a agregarle ahora a las charlas la propiedad de persistirse en un esquema de base de datos, en principio en la nube, a través del servicio **Firebase**.
+
+## Configuración de Firebase
+
+Con nuestra cuenta de google, debemos configurar la consola ingresando a:
+
+https://console.firebase.google.com/
+
+y generando un proyecto.
+
+[Este video](https://www.youtube.com/watch?v=-khvgXEq09w&feature=youtu.be) cuenta en detalle cómo configurar y utilizar la consola de Firebase además de generar un componente desde NodeJS para acceder a dicha información.
+
+## Configuración de la consola
+
+En Database, Datos creamos dentro del proyecto la colección "talks":
+
+![](images/firebaseConfguration1.png)
+
+## Configuración del proyecto server
+
+Agregamos la dependencia a Firebase en el proyecto server.
+
+```bash
+npm install firebase --save
+```
+
+## Autenticación desactivada (solo para empezar a jugar)
+
+Inicialmente en la solapa Reglas vamos a desactivar el login requerido para poder guardar o recolectar información:
+
+![](images/firebaseConfguration2.png)
+
+> Por supuesto que desaconsejamos esta configuración, pero para comenzar nos permitirá concentrarnos en generar la información correctamente.
+
+## Carga de datos iniciales
+
+Para cargar la información generamos un archivo js y lo invocamos en la consola:
+
+```bash
+npm run -s build
+node dist/services/initData
+```
+
+TODO: Ver por qué no libera el control
+
+![](images/TalksInsertedInFirebase.png)
+
+## Node monitor (TODO)
+También empezaremos a utilizar **nodemon**, que es un componente que nos permite que el server node se reinicie automáticamente cada vez que hacemos un cambio sobre los archivos que están alojados en el server. En el archivo package.json ya estaba configurado, para activarlo en lugar de ejecutar el server con npm start lo vamos a hacer en modo desarrollo:
+
+```bash
+$ npm dev
+```
+
+## Cache de las charlas
+
+Si asumimos que la cantidad de charlas que vamos a tener no superará las 100.000 por el momento, podemos mantener una [cache](https://es.wikipedia.org/wiki/Cach%C3%A9_(inform%C3%A1tica)) o buffer en la memoria de NodeJS y tenerla sincronizada con Firebase. De esa manera cuando levante la aplicación tenemos que definir que esa cache (compuesta por una lista de JSONs) se asocia al valor que tendrá la colección "talks" en nuestra base de datos en tiempo real que definimos en Firebase.
+
+Esta es la nueva responsabilidad de TalkService que también podríamos llamar TalkRepo o TalkHome, como el lugar donde voy a buscar las charlas en el servidor.
+
+```javascript
+export default class TalksService {
+    
+        constructor() {
+            this.talks = []
+            this.db = db.collection("talks")
+            this.db.on("value", snap => {
+                this.talks = []
+                snap.forEach(snapTalk => {
+                    const newTalk = { id: snapTalk.key }
+                    const talk = snapTalk.val()
+                    newTalk.author = talk.author
+                    newTalk.title = talk.title
+                    newTalk.room = talk.room
+                    this.talks.push(newTalk)
+                })
+            })
+        }
+
+    ...
+```
+
+Periódicamente, la aplicación de Node busca la información de la colección "talks" y la sincroniza. Por el momento, sabemos que no hay escrituras, entonces nos alcanza con una estrategia muy básica 
+
+Fíjense que hasta el momento venimos manejando las charlas como un simple JSON, sin comportamiento. Esto es simple y cómodo, aunque ya empieza a costarnos líneas en el service, que debe desagregar la información que recibe para construir el objeto charla que va a estar en la cache, por ejemplo para poder agregarle el id contra el cual buscar.
+
+
 
 ## Diagrama de arquitectura
 
-![](images/iteracion5.png)
+![](images/iteracion6.png)
 
 Tenemos los siguientes cambios:
 

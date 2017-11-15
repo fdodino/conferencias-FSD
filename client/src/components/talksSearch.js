@@ -50,7 +50,6 @@ export default class TalksSearch extends Component {
                 }
             })
             .then(talks => {
-                console.log(talks)
                 this.setState({ 
                     searchValue: searchValue ,
                     talks: talks,
