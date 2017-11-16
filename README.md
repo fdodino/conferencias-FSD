@@ -83,29 +83,38 @@ export default class TalksService {
         }
 ```
 
-- a su vez, aparece un nuevo endpoint: un método POST a la URL /api/talks donde recibimos en el body un JSON. El procesamiento en sí lo delegamos a talkService, pero además devolvemos un JSON con la respuesta (se dio de alta ok o se produjeron los siguientes errores)
+- a su vez, aparece un nuevo endpoint: un método POST a la URL /api/talks donde recibimos en el body un JSON. El procesamiento en sí lo delegamos a talkService, pero además devolvemos un JSON con la respuesta 
+
+- código HTTP 200 (ok) o 400 (Bad Request) indicando si se dio de alta o hay errores
+- en el caso de haber errores, los devolvemos en una colección
 
 ```javascript
 	api.post('/talks', (req, res) => {
 		const processedTalk = talkService.insert(req.body)
-		console.log("Processed talk", processedTalk)
-		res.json(processResultFor(processedTalk))
+		res.json(httpCodeFor(processedTalk), processResultFor(processedTalk))
 	})
 ```
 
-Pero ¿quién entiende processResultFor? No hay objeto , lo que refuerza la naturaleza híbrida de ECMA Script:
+Pero ¿quién entiende processResultFor y httpCodeFor? No hay objeto , lo que refuerza la naturaleza híbrida de ECMA Script:
 
 ```javascript
 function processResultFor(element) {
-	return {
+	const result = {
 		"status": "processed",
-		"statusOk": element.ok,
-		"statusMessage": element.errors 
+		"statusOk": element.ok
 	}
+	if (!element.ok) {
+		result.errorsDetected = element.errors 
+	}
+	return result
+}
+
+function httpCodeFor(element) {
+	return (element.ok) ? 200 : 400
 }
 ```
 
-es una función "sin dueño".
+ambas son funciones "sin dueño", utilizadas por la implementación de routing de nuestra aplicación.
 
 
 ## Prueba desde un cliente REST

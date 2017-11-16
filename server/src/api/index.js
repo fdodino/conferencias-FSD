@@ -5,11 +5,18 @@ import TalkService from "../services/talkService"
 const talkService = new TalkService()
 
 function processResultFor(element) {
-	return {
+	const result = {
 		"status": "processed",
-		"statusOk": element.ok,
-		"statusMessage": element.errors 
+		"statusOk": element.ok
 	}
+	if (!element.ok) {
+		result.errorsDetected = element.errors 
+	}
+	return result
+}
+
+function httpCodeFor(element) {
+	return (element.ok) ? 200 : 400
 }
 
 export default ({ config, db }) => {
@@ -22,8 +29,7 @@ export default ({ config, db }) => {
 
 	api.post('/talks', (req, res) => {
 		const processedTalk = talkService.insert(req.body)
-		console.log("Processed talk", processedTalk)
-		res.json(processResultFor(processedTalk))
+		res.json(httpCodeFor(processedTalk), processResultFor(processedTalk))
 	})
 
 	api.get('/talks/:searchValue', (req, res) => {

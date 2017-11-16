@@ -28,4 +28,4 @@ class DataBootstrap {
 console.log("Data initialization started")
 const dataBootstrap = new DataBootstrap()
 dataBootstrap.initData()
-console.log("Data initailization executed")
+console.log("Data initialization executed")
