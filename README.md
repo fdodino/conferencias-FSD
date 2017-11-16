@@ -53,7 +53,26 @@ En Firebase tendremos una colección nueva: conference, que reemplaza a talks. E
 
 ![](images/deleteTalks.gif)
 
-Para pedir una colección al objeto db, ¡estamos inicializando la aplicación _n_ veces! Debemos cambiar eso ahora que vamos a tener
+Para pedir una colección al objeto db, ¡estamos inicializando la aplicación _n_ veces! Debemos cambiar eso ahora que vamos a tener dentro de conference tres colecciones hijas:
+
+- talks: las charlas
+- rooms: las salas
+- schedules: los horarios
+
+```
+const database = firebase.initializeApp(config).database() 
+
+const db = {
+    
+    collection(collection) {
+        return database.ref(collection)
+    }
+}
+```
+
+Y ahora sí podemos generar nuestro nuevo [initData](server/src/services/initData.js), que generará las tres colecciones.
+
+
 
 ## Diagrama de arquitectura
 
