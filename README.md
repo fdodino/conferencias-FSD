@@ -88,6 +88,8 @@ En el server, ahora necesitamos tener tres services: uno para las charlas, otro 
 
 Entonces podemos construir un service general, y construir _template method_ para que cada subclase implemente cierto comportamiento:
 
+![](images/serviceHierarchy.png)
+
 ```javascript
 export class AbstractService {
 

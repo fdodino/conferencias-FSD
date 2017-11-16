@@ -66,15 +66,3 @@ export class ScheduleService extends AbstractService {
     }
 
 }
-
-export class TalkConferenceService {
-
-    constructor() {
-        this.talkService = new TalkService()
-    }
-
-    conferenceGrid() {
-        console.log(this.talkService.findAll())
-
-    }
-}
