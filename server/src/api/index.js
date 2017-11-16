@@ -1,8 +1,10 @@
 import { version } from '../../package.json'
 import { Router } from 'express'
-import TalkService from "../services/talkService"
+import { TalkService, RoomService, ScheduleService } from "../services/talkService"
 
 const talkService = new TalkService()
+const roomService = new RoomService()
+const scheduleService = new ScheduleService()
 
 function processResultFor(element) {
 	const result = {
@@ -23,8 +25,15 @@ export default ({ config, db }) => {
 	let api = Router()
 
 	api.get('/talks', (req, res) => {
-		const searchValue = req.params.searchValue || ""
 		res.json(talkService.findAll())
+	})
+
+	api.get('/rooms', (req, res) => {
+		res.json(roomService.findAll())
+	})
+
+	api.get('/schedules', (req, res) => {
+		res.json(scheduleService.findAll())
 	})
 
 	api.post('/talks', (req, res) => {

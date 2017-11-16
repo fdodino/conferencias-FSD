@@ -3,7 +3,7 @@
 
 # Curso Full Stack Developer
 
-## Octava iteración: grilla de horarios
+## Octava iteración: grilla de horarios - Parte I
 
 ## "Esto a mí no me sirve"
 
@@ -81,6 +81,115 @@ Data initialization started
 que generará las tres colecciones:
 
 ![](images/firebaseNewDatabase.png)
+
+## Repos más generales
+
+En el server, ahora necesitamos tener tres services: uno para las charlas, otro para las salas y finalmente uno más para los horarios. Todos tienen un comportamiento parecido: deben sincronizar la información contra una colección de firebase, mantienen una cache en memoria sincronizada y saben generar un elemento nuevo y buscar todos los elementos de la cache.
+
+Entonces podemos construir un service general, y construir _template method_ para que cada subclase implemente cierto comportamiento:
+
+```javascript
+export class AbstractService {
+
+    constructor() {
+        this.elements = []
+        this.db = db.collection(this.collectionName())
+        this.db.on("value", snap => {
+            this.elements = []
+            snap.forEach(snapshot => {
+                const element = this.createElement(snapshot.val())
+                element.id = snapshot.key
+                this.elements.push(element)
+            })
+        })
+    }
+
+    // por defecto los elementos son json
+    createElement(json) {
+        return json
+    }
+
+    findAll() {
+        return this.elements
+    }
+
+    insert(elementJSON) {
+        const element = new Talk(elementJSON)
+        element.validate()
+        if (element.ok) {
+            this.db.push(element)
+        }
+        return element
+    }
+
+}
+
+export class TalkService extends AbstractService {
+
+    collectionName() {
+        return "conference/talks"
+    }
+
+    // aquí estamos creando un objeto de dominio JSON
+    createElement(json) {
+        return new Talk(json)
+    }
+
+    filter(value) {
+        return this.elements.filter(talk => talk.author.toUpperCase().includes(value.toUpperCase()) || talk.title.toUpperCase().includes(value.toUpperCase()))
+    }
+
+}
+
+export class RoomService extends AbstractService {
+
+    collectionName() {
+        return "conference/rooms"
+    }
+
+}
+
+export class ScheduleService extends AbstractService {
+
+    collectionName() {
+        return "conference/schedules"
+    }
+
+}
+```
+
+## Nuevos endpoints
+
+Para probar nuestros nuevos endpoints modificamos el archivo api/index.js:
+
+```javascript
+...
+import { TalkService, RoomService, ScheduleService } from "../services/talkService"
+
+const talkService = new TalkService()
+const roomService = new RoomService()
+const scheduleService = new ScheduleService()
+...
+
+export default ({ config, db }) => {
+    ...
+
+	api.get('/rooms', (req, res) => {
+		res.json(roomService.findAll())
+	})
+
+	api.get('/schedules', (req, res) => {
+		res.json(scheduleService.findAll())
+	})
+
+```
+
+## Prueba en POSTMAN
+
+Probamos los nuevos endpoints en POSTMAN:
+
+![](images/newEndpoints.gif)
+
 
 ## Diagrama de arquitectura
 
