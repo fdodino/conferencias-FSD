@@ -192,14 +192,35 @@ Probamos los nuevos endpoints en POSTMAN:
 
 ![](images/newEndpoints.gif)
 
+## Cambios en el cliente
+
+Si bien nuestro modelo cambió, esto impacta únicamente en el componente que muestra la charla. Lo que vamos a hacer es aprovechar que la sala tiene un color para utilizarlo como fondo, y le vamos a poner un avatar en color negro con letra blanca, para que sea lo suficientemente neutro:
+
+```javascript
+export class RoomComponent extends Component {
+    render() {
+        return (
+            <Chip
+            backgroundColor={this.props.room.color}
+            >
+                <Avatar color={white} backgroundColor={darkBlack}>
+                    ?
+                </Avatar>
+                { this.props.room.name  }
+            </Chip>
+        )
+    }
+}
+```
+
+## Demo de esta iteración
+
+La aplicación en React tiene ese pequeño cambio:
+
+![](images/demo2.gif)
 
 ## Diagrama de arquitectura
 
-![](images/iteracion7.png)
+![](images/iteracion8.png)
 
-## Demo
-
-En la demo vemos cómo al disparar la actualización desde Postman nos aparece mensajes de error o un ok y se visualiza en la aplicación React así como en Firebase:
-
-![](images/demo.gif)
 

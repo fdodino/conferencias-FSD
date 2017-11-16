@@ -6,7 +6,7 @@ import {Card, CardTitle, CardText} from 'material-ui/Card'
 // Material UI - Chip
 import Avatar from 'material-ui/Avatar'
 import Chip from 'material-ui/Chip'
-import {blue300, indigo900} from 'material-ui/styles/colors'
+import {white, darkBlack} from 'material-ui/styles/colors'
 
 
 export class TalkCard extends Component {
@@ -35,12 +35,12 @@ export class RoomComponent extends Component {
     render() {
         return (
             <Chip
-            backgroundColor={blue300}
+            backgroundColor={this.props.room.color}
             >
-                <Avatar color={blue300} backgroundColor={indigo900}>
+                <Avatar color={white} backgroundColor={darkBlack}>
                     ?
                 </Avatar>
-                { this.props.room  }
+                { this.props.room.name  }
             </Chip>
         )
     }
