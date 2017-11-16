@@ -59,7 +59,7 @@ Para pedir una colección al objeto db, ¡estamos inicializando la aplicación _
 - rooms: las salas
 - schedules: los horarios
 
-```
+```javascript
 const database = firebase.initializeApp(config).database() 
 
 const db = {
@@ -70,9 +70,17 @@ const db = {
 }
 ```
 
-Y ahora sí podemos generar nuestro nuevo [initData](server/src/services/initData.js), que generará las tres colecciones.
+Y ahora sí podemos generar nuestro nuevo [initData](server/src/services/initData.js)
 
+```bash
+$ node dist/services/itData.js
+Data initialization started
+. etc.
+```
 
+que generará las tres colecciones:
+
+![](images/firebaseNewDatabase.png)
 
 ## Diagrama de arquitectura
 
