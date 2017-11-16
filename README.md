@@ -3,18 +3,51 @@
 
 # Curso Full Stack Developer
 
-## Séptima iteración: alta de una charla mediante un servicio REST
+## Octava iteración: grilla de horarios
 
-## Node monitor
+## "Esto a mí no me sirve"
 
-Empezamos a utilizar [nodemon](https://nodemon.io/), que es una utilidad que nos permite que el server node se reinicie automáticamente cada vez que hacemos un cambio sobre los archivos que están alojados en el server. En el archivo _package.json_ lo configuramos reemplazando el script _start_ para utilizar nodemon en lugar de node:
+El usuario ve la aplicación y nos recibe con su tan trillada frase: "Pero ¿y cómo veo yo los horarios de las charlas y las salas en una grilla?"
 
-```json
-  "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
-    "build": "babel src -s -D -d dist --presets es2015,stage-0",
-    "start": "nodemon dist",
-```
+Ups, bueno, todos nos equivocamos.
+
+"Igual está lindo", nos dice guiñándonos un ojo.
+
+Bueno, tenemos trabajo
+
+## Cambios en el modelo
+
+Nos pide "una grilla" con el horario. No está hablando de la grilla como control sino como concepto del negocio. Para eso tenemos que agregar un concepto nuevo: el horario, y tenemos que pensar en ubicar cada charla dentro de una fila / columna. 
+
+Podemos tener como columnas las salas y como filas los horarios. 
+
+### Atributos de calidad de nuestro diseño
+
+Ahora hay que tomar otra decisión: ¿cómo modelar un horario? y ¿necesitamos generar la sala como abstracción? Otra pregunta que aparece es "¿todas las charlas tienen la misma duración?", pregunta que no podemos contestar nosotros, sino **el usuario**, quien nos contesta "en principio sí, eso por ahora no me interesa". Esto da pie para numerosos comentarios: no creerle al usuario, hacerlo flexible de entrada tiene un costo y eso implica resignar otras cosas que el usuario valoraría más. Como además no es sencillo mostrar una grilla considerando horarios diferentes, vamos a elegir simplificar nuestro modelo y decir que cada charla tiene un horario asignado.
+
+Es decir, poniendo en la balanza muchos atributos de calidad de nuestro diseño elegimos
+
+- simplicidad
+- velocidad de construcción
+
+por sobre la 
+
+- flexibilidad
+- mantenibilidad
+
+### Horarios
+
+El horario vamos a mantenerlo como:
+
+- una entidad separada (una colección más en Firebase), para facilitar la construcción de la grilla sin tener que recorrer las charlas
+- pero también vamos a embeber el valor dentro de la charla, porque también evita tener que hacer JOINs para obtener el dato del horario de una charla particular.  
+
+## Salones
+
+Lo mismo haremos con los salones. Tendremos:
+
+- una entidad separada para facilitar la construcción de las columnas
+- y vamos a embeber los datos del salón
 
 ## Diagrama de arquitectura
 

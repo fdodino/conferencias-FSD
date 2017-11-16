@@ -9,14 +9,12 @@ const config = {
     messagingSenderId: "856589092410"
 }
 
+const database = firebase.initializeApp(config).database() 
+
 const db = {
     
-    database() {
-        return firebase.initializeApp(config).database()
-    },
-
     collection(collection) {
-        return this.database().ref(collection)
+        return database.ref(collection)
     }
 }
 
