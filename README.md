@@ -60,6 +60,16 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ![](images/demo.gif)
 
+## Una prueba más
+
+Podemos ver qué pasa si creamos una nueva sala. En Firebase damos de alta el Aula Magna, con un color rojo claro:
+
+![](images/newRoom1.png)
+
+En la aplicación vemos que se soporta el cambio perfectamente (solamente habría que arreglar la toolbar de la charla para que baje la línea y respete el ancho de su contenedor):
+
+![](images/newRoom2.png)
+
 ## Diagrama de arquitectura
 
 ![](images/iteracion10.png)
