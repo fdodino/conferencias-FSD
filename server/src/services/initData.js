@@ -49,13 +49,13 @@ class DataBootstrap {
         this.db.collection("conference/schedules").push(schedule)
     }
 
-    insertTalk(author, title, room, horario) {
+    insertTalk(author, title, room, schedule) {
         console.log("Inserting Talk ", title)
         this.db.collection("conference/talks").push({
             "author": author,
             "title": title,
             "room": room,
-            "horario": horario
+            "schedule": schedule
         })
     }
 
