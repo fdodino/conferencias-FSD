@@ -1,47 +1,56 @@
 import React, { Component } from 'react'
 
-// Material UI - Card
-import {Card, CardTitle, CardText} from 'material-ui/Card'
+import './talkCard.css'
+
+// Material UI - Paper
+import Paper from 'material-ui/Paper'
+import {Toolbar} from 'material-ui/Toolbar'
 
 // Material UI - Chip
 import Avatar from 'material-ui/Avatar'
 import Chip from 'material-ui/Chip'
-import {white, darkBlack} from 'material-ui/styles/colors'
 
+// Iconos
+import Alarm from 'mui-icons/cmdi/alarm'
 
 export class TalkCard extends Component {
-    componentWillMount() {
-        this.talk = this.props.talk
-    }
 
     render() {
+        if (this.props.talk === null) 
+            return null
         return (
-            <Card>
-                <CardTitle title={ this.talk.title } subtitle={ this.talk.author }/>
-                <div align="center">
-                    <RoomComponent 
-                        room={this.talk.room}
-                    />
-                </div>
-                <CardText>
-                </CardText>
-            </Card>
+            <Paper rounded={true}>
+                <Toolbar>
+                    <h3 className="title">{this.props.talk.title} </h3>
+                </Toolbar>
+                <h2 className="author">{this.props.talk.author}</h2>
+            </Paper>
         )
     }
-    
+
 }
 
 export class RoomComponent extends Component {
     render() {
         return (
-            <Chip
-            backgroundColor={this.props.room.color}
-            >
-                <Avatar color={white} backgroundColor={darkBlack}>
-                    ?
-                </Avatar>
-                { this.props.room.name  }
+            <Chip backgroundColor={this.props.room.color}>
+                {this.props.room.name}
             </Chip>
+        )
+    }
+}
+
+export class ScheduleComponent extends Component {
+    render() {
+        return (
+            <div align="center">
+                <Chip>
+                    <Avatar>
+                        <Alarm/>
+                    </Avatar>
+                    {this.props.schedule.from} - {this.props.schedule.to}
+                </Chip>
+            </div>
         )
     }
 }

@@ -17,7 +17,8 @@
       "sourceType": "module"
     },
     "env": {
-      "node": true
+      "node": true,
+      "es6": true
     },
     "rules": {
       "no-console": 0,
@@ -29,6 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.13.3",
+    "collectionsjs": "^0.3.2",
     "compression": "^1.5.2",
     "cors": "^2.7.1",
     "express": "^4.13.3",

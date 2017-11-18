@@ -8,4 +8,12 @@ export default class TalksService {
         return fetch("/api/talks/" + value)
     }
 
+    talkGrid(value) {
+        if (value !== undefined && value !== "") {
+            return fetch("/api/talkGrid/" + value)
+        } else {
+            return fetch("/api/talkGrid")
+        }
+    }
+
 }

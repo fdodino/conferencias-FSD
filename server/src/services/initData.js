@@ -55,7 +55,7 @@ class DataBootstrap {
             "author": author,
             "title": title,
             "room": room,
-            "horario": horario
+            "schedule": horario
         })
     }
 

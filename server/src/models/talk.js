@@ -3,7 +3,8 @@ export default class Talk {
     constructor(talkJSON) {
         this.title = ""
         this.author = ""
-        this.room = ""
+        this.room = {}
+        this.schedule = {}
         this.errors = []
         if (talkJSON !== undefined) {
             this.fromJSON(talkJSON)
@@ -20,6 +21,9 @@ export default class Talk {
         if (this.room == "") {
             this.errors.push("Debe ingresar sala")
         }
+        if (this.schedule == "") {
+            this.errors.push("Debe ingresar horario")
+        }
     }
 
     get ok() {
@@ -30,5 +34,6 @@ export default class Talk {
         this.author = talkJSON.author
         this.title = talkJSON.title
         this.room = talkJSON.room
+        this.schedule = talkJSON.schedule
     }
 } 

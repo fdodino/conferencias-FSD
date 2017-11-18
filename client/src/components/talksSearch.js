@@ -18,7 +18,8 @@ export default class TalksSearch extends Component {
         super(props)
         this.state = {
             searchValue: "",
-            talks: [],
+            rooms: [],
+            scheduleDTO: [],
             errorMessage: ""
         }
     }
@@ -29,19 +30,19 @@ export default class TalksSearch extends Component {
                 <ErrorMessage
                     message={this.state.errorMessage}
                 />
-                <TextField 
+                <TextField
                     value={ this.state.searchValue } 
                     onChange={ this.searchTalks.bind(this) } 
                     hintText="Valor a buscar..."
                 />
-                <TalksList items={this.state.talks}/>
+                <TalksList rooms={this.state.rooms} scheduleDTO={this.state.scheduleDTO}/>
             </div>
         )
     }
 
     searchTalks(e) {
         const searchValue = e.target.value
-        talksService.filter(searchValue)
+        talksService.talkGrid(searchValue)
             .then(response => {
                 if (response.ok) {
                     return response.json() 
@@ -49,17 +50,19 @@ export default class TalksSearch extends Component {
                     throw Error(response.status + " (" + response.statusText + ")")
                 }
             })
-            .then(talks => {
-                this.setState({ 
-                    searchValue: searchValue ,
-                    talks: talks,
+            .then(talkGrid => {
+                this.setState({
+                    searchValue: searchValue, 
+                    rooms: talkGrid.rooms,
+                    scheduleDTO: talkGrid.scheduleDTO,
                     errorMessage: ""
                 })
             })
             .catch((err) => {
                 this.setState({ 
-                    searchValue: searchValue ,
-                    talks: [],
+                    searchValue: searchValue, 
+                    rooms: [],
+                    scheduleDTO: [],
                     errorMessage: "No se pudo obtener las charlas. Error: " + err.message
                 })
             })
