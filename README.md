@@ -115,8 +115,6 @@ Todavía no hicimos nada del lado del cliente, pero ya podemos probar consultas 
 
 ## Diagrama de arquitectura
 
-TODO: Cambiar
-
-![](images/iteracion8.png)
+![](images/iteracion9.png)
 
 
