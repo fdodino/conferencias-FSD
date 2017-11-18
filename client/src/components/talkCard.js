@@ -4,7 +4,7 @@ import './talkCard.css'
 
 // Material UI - Paper
 import Paper from 'material-ui/Paper'
-import {Toolbar} from 'material-ui/Toolbar'
+import {Toolbar, ToolbarTitle} from 'material-ui/Toolbar'
 
 // Material UI - Chip
 import Avatar from 'material-ui/Avatar'
@@ -21,7 +21,7 @@ export class TalkCard extends Component {
         return (
             <Paper rounded={true}>
                 <Toolbar>
-                    <h3 className="title">{this.props.talk.title} </h3>
+                    <ToolbarTitle text={this.props.talk.title} /> 
                 </Toolbar>
                 <h2 className="author">{this.props.talk.author}</h2>
             </Paper>
