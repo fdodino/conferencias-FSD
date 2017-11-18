@@ -17,16 +17,22 @@ La nueva jerarquía propuesta es:
 * **TalkSearch (modificado)**: guarda en el estado el valor a buscar, el mensaje de error y el grilla con los resultados
     - ErrorMessage: muestra el mensaje de error por un tiempo
     - **TalkList (modificado)**: arma la tabla
-        - **RoomComponent (nuevo)**: sabe mostrar una sala, ahora aprovechando el color definido para cada sala
+        - **RoomComponent (nuevo)**: sabe mostrar una sala, aprovechando el color definido para cada sala
         - **ScheduleComponent (nuevo)**: sabe mostrar el horario, con un ícono descriptivo y el rango horario previsto
-        - **TalksColumn (nuevo)**: sabe mostrar la lista de charlas, tantas como vengan en scheduleDTO.talks. Delega a TalkCard
+        - **TalksColumn (nuevo)**: sabe mostrar la lista de charlas, tantas como vengan en _scheduleDTO.talks_. Delega a TalkCard
             - **TalkCard (modificado)**: sabe mostrar una charla, ahora no con un Card, sino con un Paper con borde redondeado y una Toolbar.
+
+## Correcciones
+
+En versiones anteriores TalkList estaba haciendo esto:
+
+
 
 ## Demo de esta iteración
 
-La aplicación en React tiene ese pequeño cambio:
+Vemos cómo queda la aplicación en ReactJS:
 
-![](images/demo2.gif)
+![](images/demo.gif)
 
 ## Diagrama de arquitectura
 
