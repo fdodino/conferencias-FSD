@@ -15,7 +15,7 @@ Para poder utilizar las colecciones Set, Map y List desarrolladas en ES6, debemo
 
 ```json
 "env": {
-  ..otra configuración..
+  "...otras configuraciones..."
   "es6": true
 },
 ```
