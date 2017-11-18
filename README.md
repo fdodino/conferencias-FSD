@@ -41,7 +41,7 @@ export class TalkCard extends Component {
 }
 ``` 
 
-Esto no era bueno, ya que el evento componentWillMount() solo se ejecuta cuando React detecta que debe ejecutarse:
+Esta no es una buena decisión, ya que el evento componentWillMount() solo se ejecuta cuando React detecta que debe ejecutarse:
 
 ![](images/reactJSLifecycle.png)
 
