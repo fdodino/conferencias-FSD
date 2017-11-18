@@ -3,223 +3,119 @@
 
 # Curso Full Stack Developer
 
-## Octava iteración: grilla de horarios - Parte I
+## Novena iteración: grilla de horarios - Parte II
 
-## "Esto a mí no me sirve"
+## Nuevo endpoint para generar la grilla de charlas
 
-El usuario ve la aplicación y nos recibe con su tan trillada frase: "Pero ¿y cómo veo yo los horarios de las charlas y las salas en una grilla?"
+Ahora que actualizamos nuestro modelo, vamos a construir un nuevo endpoint: un servicio REST que vía GET nos devolverá la grilla con las charlas (por el momento no incorporamos fechas).
 
-Ups, bueno, todos nos equivocamos. :smile: 
+## Utilizando las colecciones ES6
 
-"Igual está lindo", nos dice guiñándonos un ojo. Bueno, tenemos trabajo.
+Para poder utilizar las colecciones Set, Map y List desarrolladas en ES6, debemos agregar esta configuración en el package.json:
 
-## Cambios en el modelo
-
-Nos pidieron "una grilla" con el horario, donde no se habla de grilla como control sino como concepto del negocio. Para eso tenemos que incorporar algo que hasta el momento no habíamos considerado: el horario, y tenemos que pensar en ubicar cada charla dentro de una fila / columna. 
-
-Podemos tener como columnas las salas y como filas los horarios. 
-
-### Atributos de calidad de nuestro diseño
-
-Ahora hay que tomar otra decisión: ¿cómo modelar un horario? y ¿necesitamos generar la sala como abstracción? Otra pregunta que aparece es "¿todas las charlas tienen la misma duración?", pregunta que no podemos contestar nosotros, sino **el usuario**, quien nos contesta "en principio sí, eso por ahora no me interesa". Esto da pie para numerosos comentarios: no creerle al usuario, hacerlo flexible de entrada tiene un costo y eso implica resignar otras cosas que el usuario valoraría más. Como además no es sencillo mostrar una grilla considerando horarios diferentes, vamos a elegir simplificar nuestro modelo y decir que todas las charlas tienen la misma duración, por lo tanto cada charla tiene un único horario asignado.
-
-Es decir, poniendo en la balanza muchos atributos de calidad de nuestro diseño elegimos
-
-- simplicidad
-- velocidad de construcción
-
-por sobre la 
-
-- flexibilidad
-- mantenibilidad
-
-### Horarios
-
-El horario vamos a mantenerlo como:
-
-- una entidad separada (una colección más en Firebase), para facilitar la construcción de la grilla sin tener que recorrer las charlas
-- pero también vamos a embeber el valor dentro de la charla, porque también evita tener que hacer JOINs para obtener el dato del horario de una charla particular.  
-
-### Salones
-
-Lo mismo haremos con los salones. Tendremos:
-
-- una entidad separada para facilitar la construcción de las columnas
-- y vamos a embeber los datos del salón en cada charla
-
-## Primer paso: definir el nuevo modelo de datos
-
-En Firebase tendremos una colección nueva: conference, que reemplaza a talks. Esto requiere borrar los datos existentes (ya que es más simple que pensar un proceso de migración de datos). 
-
-![](images/deleteTalks.gif)
-
-Para pedir una colección al objeto db, ¡estamos inicializando la aplicación _n_ veces! Debemos cambiar eso ahora que vamos a tener dentro de conference tres colecciones hijas: 
-
-- **talks**: las charlas
-- **rooms**: las salas
-- **schedules**: los horarios
-
-```javascript
-const database = firebase.initializeApp(config).database() 
-
-const db = {
-    
-    collection(collection) {
-        return database.ref(collection)
-    }
-}
+```json
+"env": {
+  ...,
+  "es6": true
+},
 ```
 
-Y ahora sí podemos generar nuestro nuevo [initData](server/src/services/initData.js)
+Según recomiendan [en este issue](https://github.com/eslint/eslint/issues/5674).
 
-```bash
-$ node dist/services/itData.js
-Data initialization started
-. etc.
-```
+## Nuevo endpoint
 
-que generará las tres colecciones:
-
-![](images/firebaseNewDatabase.png)
-
-## Repos más generales
-
-En el server, ahora necesitamos tener tres services: uno para las charlas, otro para las salas y finalmente uno más para los horarios. Todos tienen un comportamiento parecido: deben sincronizar la información contra una colección de firebase, mantienen una cache en memoria sincronizada y saben generar un elemento nuevo y buscar todos los elementos de la cache.
-
-Entonces podemos construir un service general, y construir _template method_ para que cada subclase implemente cierto comportamiento:
-
-![](images/servicesHierarchy.png)
+El nuevo endpoint se resuelve en un nuevo service que necesita como dependencias los services de las entidades anteriormente utilizadas. En el archivo api/index.js escribimos:
 
 ```javascript
-export class AbstractService {
-
-    constructor() {
-        this.elements = []
-        this.db = db.collection(this.collectionName())
-        this.db.on("value", snap => {
-            this.elements = []
-            snap.forEach(snapshot => {
-                const element = this.createElement(snapshot.val())
-                element.id = snapshot.key
-                this.elements.push(element)
-            })
-        })
-    }
-
-    // por defecto los elementos son json
-    createElement(json) {
-        return json
-    }
-
-    findAll() {
-        return this.elements
-    }
-
-    insert(elementJSON) {
-        const element = new Talk(elementJSON)
-        element.validate()
-        if (element.ok) {
-            this.db.push(element)
-        }
-        return element
-    }
-
-}
-
-export class TalkService extends AbstractService {
-
-    collectionName() {
-        return "conference/talks"
-    }
-
-    // aquí estamos creando un objeto de dominio JSON
-    createElement(json) {
-        return new Talk(json)
-    }
-
-    filter(value) {
-        return this.elements.filter(talk => talk.author.toUpperCase().includes(value.toUpperCase()) || talk.title.toUpperCase().includes(value.toUpperCase()))
-    }
-
-}
-
-export class RoomService extends AbstractService {
-
-    collectionName() {
-        return "conference/rooms"
-    }
-
-}
-
-export class ScheduleService extends AbstractService {
-
-    collectionName() {
-        return "conference/schedules"
-    }
-
-}
-```
-
-## Nuevos endpoints
-
-Para probar nuestros nuevos endpoints modificamos el archivo api/index.js:
-
-```javascript
-...
-import { TalkService, RoomService, ScheduleService } from "../services/talkService"
-
 const talkService = new TalkService()
 const roomService = new RoomService()
 const scheduleService = new ScheduleService()
+
+const talkGridService = new TalkGridService({
+	"talkService": talkService,
+	"roomService": roomService,
+	"scheduleService": scheduleService
+})
+
 ...
 
-export default ({ config, db }) => {
-    ...
+api...
 
-	api.get('/rooms', (req, res) => {
-		res.json(roomService.findAll())
-	})
-
-	api.get('/schedules', (req, res) => {
-		res.json(scheduleService.findAll())
+	api.get('/talkGrid/:searchValue', (req, res) => {
+		const searchValue = req.params.searchValue || ""
+		res.json(talkGridService.talkGrid(searchValue))
 	})
 
 ```
 
-## Prueba en POSTMAN
+## El Servicio propiamente dicho
 
-Probamos los nuevos endpoints en POSTMAN:
+El algoritmo que construye la grilla de charlas aprovecha un doble corte de control, primero por horario y luego por sala, porque así queremos mostrar la información (en filas los horarios y en columnas las salas, si lo quisiéramos al revés deberíamos alterar el orden del corte de control).
 
-![](images/newEndpoints.gif)
+¿Qué es un corte de control? Pueden leer [este artículo](http://librosweb.es/libro/algoritmos_python/capitulo_13/corte_de_control.html) que lo explica en Python
 
-## Cambios en el cliente
-
-Si bien nuestro modelo cambió, esto impacta únicamente en el componente que muestra la charla. Lo que vamos a hacer es aprovechar que la sala tiene un color para utilizarlo como fondo, y le vamos a poner un avatar en color negro con letra blanca, para que sea lo suficientemente neutro:
+Un detalle importante es que el corte de control se puede resolver fácilmente a través de la estructura de datos Mapa (o similar, lo importante es que sea un conjunto de pares clave-valor).
 
 ```javascript
-export class RoomComponent extends Component {
-    render() {
-        return (
-            <Chip
-            backgroundColor={this.props.room.color}
-            >
-                <Avatar color={white} backgroundColor={darkBlack}>
-                    ?
-                </Avatar>
-                { this.props.room.name  }
-            </Chip>
-        )
+export class TalkGridService {
+
+    constructor(services) {
+        ...
     }
+
+    talkGrid(searchValue) {
+        const talksMap = this.buildTalksMap(searchValue)
+        const rooms = this.roomService.findAll()
+        const scheduleDTO = this.scheduleService.findAll().map((schedule) => {
+            return new ScheduleDTO(schedule, rooms, talksMap).toJSON()
+        })
+        return {
+            rooms: rooms,
+            scheduleDTO: scheduleDTO
+        }
+    }
+
+    buildTalksMap(searchValue) {
+        const result = new Map()
+        this.talkService.filter(searchValue).forEach((talk) => {
+            const talks = result.get(talk.schedule.from) || new Map()
+            talks.set(talk.room.name, talk)
+            result.set(talk.schedule.from, talks)
+        })
+        return result
+    }
+}
+
+class ScheduleDTO {
+    constructor(schedule, rooms, talksMap) {
+        this.schedule = schedule
+        this.talks = rooms.map((room) => {
+            const scheduleMap = talksMap.get(schedule.from) || new Map()
+            return scheduleMap.get(room.name)
+        })
+    }
+
+    ...
 }
 ```
 
-## Demo de esta iteración
+En el snippet de código dejamos la parte esencial del algoritmo, que consiste en:
 
-La aplicación en React tiene ese pequeño cambio:
+- conocer la lista de horarios
+- conocer la lista de salones
+- armar un primer mapa de charlas, cuya clave sea el horario, y cuyo valor otro mapa, ese segundo mapa tiene como clave la sala y como valor la charla propiamente dicha. No hay repetidos en ninguno de los dos mapas.
+- luego generamos el output, que consiste en dos colecciones: una con las salas, y otra con los horarios, que contiene una lista de elementos. Cada elemento tiene un horario y _n_ charlas, una por cada sala. Si no hay charla en esa sala hay un espacio vacío (un null / undefined), esto es para no perder el orden de las salas que queremos mostrar en nuestra aplicación.
+- como frutilla del postre, podemos filtrar charlas por el título o el autor y aumentar así los espacios vacíos en la grilla 
 
-![](images/demo2.gif)
+## Demo de esta iteración en POSTMAN
+
+Todavía no hicimos nada del lado del cliente, pero ya podemos probar consultas con la grilla de charlas en POSTMAN:
+
+![](images/demo.gif)
 
 ## Diagrama de arquitectura
+
+TODO: Cambiar
 
 ![](images/iteracion8.png)
 
