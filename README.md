@@ -80,7 +80,7 @@ Data initialization started
 
 que generará las tres colecciones:
 
-![](images/firebaseNewDatabase.png)
+![](images/firebaseDatabase.png)
 
 ## Repos más generales
 
