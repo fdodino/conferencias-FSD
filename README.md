@@ -24,9 +24,35 @@ La nueva jerarquía propuesta es:
 
 ## Correcciones
 
-En versiones anteriores TalkList estaba haciendo esto:
+En versiones anteriores TalkCard estaba haciendo esto:
 
+```javascript
+export class TalkCard extends Component {
+    componentWillMount() {
+        this.talk = this.props.talk
+    }
 
+    render() {
+        return (
+            <Card>
+                <CardTitle title={ this.talk.title } subtitle={ this.talk.author }/>...
+        )
+    }
+}
+``` 
+
+Esto no era bueno, ya que el evento componentWillMount() solo se ejecuta cuando React detecta que debe ejecutarse:
+
+![](images/reactJSLifecycle.png)
+
+Si TalkCard renderiza todo en base a la referencia que tiene al objeto talk, y esa referencia no cambia, es un tema porque el método componentWillMount() no se va a ejecutar y la grilla **no se actualiza** por más que busquemos diferentes cosas (solo funciona la primera vez).
+
+Hay que tener cuidado con esto:
+
+- el estado debería ser siempre inmutable (ojo con las colecciones a las que le hacemos push en lugar de concat, queremos concat que devuelve una nueva colección y no push que mantiene la misma colección y por lo tanto no genera un nuevo estado ni un render que es lo que necesitamos)
+- hay que conocer el ciclo de vida de ReactJS para evitar sorpresas desagradables (como estar revisando este error a las 2 de la mañana de un viernes, cualquier parecido con la realidad no es mera coincidencia) 
+
+Para más información pueden leer [este artículo](https://www.codevoila.com/post/57/reactjs-tutorial-react-component-lifecycle).
 
 ## Demo de esta iteración
 
@@ -36,6 +62,6 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ## Diagrama de arquitectura
 
-![](images/iteracion8.png)
+![](images/iteracion10.png)
 
 
