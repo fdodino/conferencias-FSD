@@ -15,7 +15,7 @@ Para poder utilizar las colecciones Set, Map y List desarrolladas en ES6, debemo
 
 ```json
 "env": {
-  ...,
+  ..otra configuración..
   "es6": true
 },
 ```
@@ -107,7 +107,7 @@ En el snippet de código dejamos la parte esencial del algoritmo, que consiste e
 - luego generamos el output, que consiste en dos colecciones: una con las salas, y otra con los horarios, que contiene una lista de elementos. Cada elemento tiene un horario y _n_ charlas, una por cada sala. Si no hay charla en esa sala hay un espacio vacío (un null / undefined), esto es para no perder el orden de las salas que queremos mostrar en nuestra aplicación.
 - como frutilla del postre, podemos filtrar charlas por el título o el autor y aumentar así los espacios vacíos en la grilla 
 
-![](images/generacionCharlas.png)
+![](images/generacionGrillaCharlas.png)
 
 ## Demo de esta iteración en POSTMAN
 
