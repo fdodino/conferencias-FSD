@@ -25,7 +25,7 @@ export class AbstractService {
     }
 
     insert(elementJSON) {
-        const element = new Talk(elementJSON)
+        const element = this.createElement(elementJSON)
         element.validate()
         if (element.ok) {
             this.db.push(element)
