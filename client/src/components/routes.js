@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Login from './login'
 import TalksSearch from './talksSearch'
 
-export default class MainContainer extends Component {
+export default class Routes extends Component {
 
     render() {
         return (

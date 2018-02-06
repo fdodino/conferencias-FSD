@@ -3,37 +3,23 @@
 
 # Curso Full Stack Developer
 
-## Undécima iteración: login
+## 12° iteración: login
 
-Para poder incorporar el login vamos a necesitar definir un **esquema de routing (ruteo)**
+La pantalla de login ahora tendrá
 
-```bash
-$ npm install react-router-dom --save-dev
-```
+- una application bar, que también se agrega al caso de uso "Grilla de charlas" para poder orientar al usuario en qué lugar está ubicado
+- un texto para ingresar el usuario
+- otro texto para ingresar la clave
+- y un botón de submit
 
-El routing permite transformar una dirección (path o URI) ingresado en el browser en un componente React.
+La lógica del botón está incompleta (si presionan verán un mensaje de error), pero la pantalla de login ya tiene un estado. Cada vez que ingresa un caracter en el usuario o contraseña se genera un nuevo estado con la vista actualizada.
 
-## Definición del ruteo de la aplicación
+## Documentación para profundizar
 
-Ahora queremos tener dos páginas:
-
-- la raíz ("/") mostrará la lista de charlas (componente TalksSearch)
-- el login (path "/login") me lleva a la ventana de login, la primera vez, para luego visualizar las charlas del usuario en forma específica.
-
-Ambas direcciones son **exactas**, porque no nos interesa pasarle parámetros dentro de la URI:
-
-- http://localhost:3000/
-- http://localhost:3000/login
-
-En otros casos podríamos querer tener una URI para visualizar el detalle de una charla:
-
-- http://localhost:3000/talk/2
-
-## Documentación del router de react
-
-- [Primer uso básico](https://www.tutorialspoint.com/reactjs/reactjs_router.htm)
-- [Explicación más detallada partiendo de un ejemplo simple](https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf)
-- [La guía completa del router](https://www.sitepoint.com/react-router-v4-complete-guide/)
+-  https://medium.com/technoetics/create-basic-login-forms-using-create-react-app-module-in-reactjs-511b9790dede
+-  https://serverless-stack.com/chapters/create-a-login-page.html
+-  https://vladimirponomarev.com/blog/authentication-in-react-apps-creating-components
+-  https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1
 
 
 ## Demo de esta iteración
@@ -45,41 +31,42 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ## Diagrama de arquitectura
 
-![](images/iteracion11.png)
+![](images/iteracion12.png)
 
-En el archivo App.js cambiamos el componente raíz a MainContainer:
-
-```javascript
-class App extends Component {
-  render() {
-    return (
-      <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Ciclo de Conferencias 2018</h1>
-          </header>
-          <MainContainer />
-        </div>
-      </MuiThemeProvider>
-    )
-  }
-}
-```
-
-Y el MainContainer tiene las definiciones de las rutas: la grilla de charlas y ahora el login
+Solo agregamos la app bar en TalkSearch.js y generamos la ventana de login bastante simple
 
 ```javascript
-export default class MainContainer extends Component {
+export default class Login extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            username: '',
+            password: ''
+        }
+    }
 
     render() {
         return (
-            <Router>
-                <Switch>
-                    <Route exact path='/' component={TalksSearch} />
-                    <Route exact path='/login' component={Login} />
-                </Switch>
-            </Router>
+            <div>
+                <AppBar
+                    title="Login"
+                />
+                <TextField
+                    hintText="Ingrese su usuario"
+                    floatingLabelText="Usuario"
+                    onChange={(event, newValue) => this.setState({ username: newValue })}
+                />
+                <br />
+                <TextField
+                    type="password"
+                    hintText="Ingrese su clave"
+                    floatingLabelText="Clave"
+                    onChange={(event, newValue) => this.setState({ password: newValue })}
+                />
+                <br />
+                <RaisedButton label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)} />
+            </div>
         )
     }
 

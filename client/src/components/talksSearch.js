@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 
+// Main bar
+import AppBar from 'material-ui/AppBar'
+
 // Material UI Components
 import TextField from 'material-ui/TextField'
 
@@ -30,10 +33,14 @@ export default class TalksSearch extends Component {
                 <ErrorMessage
                     message={this.state.errorMessage}
                 />
+                <AppBar
+                    title="Grilla de charlas"
+                />
                 <TextField
                     value={ this.state.searchValue } 
                     onChange={ this.searchTalks.bind(this) } 
-                    hintText="Valor a buscar..."
+                    hintText="¿Qué charla le interesa?"
+                    floatingLabelText="Valor a buscar..."
                 />
                 <TalksList rooms={this.state.rooms} scheduleDTO={this.state.scheduleDTO}/>
             </div>
