@@ -47,7 +47,7 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ![](images/iteracion11.png)
 
-En el archivo App.js cambiamos el componente raíz a MainContainer:
+En el archivo App.js cambiamos el componente raíz a Routes:
 
 ```javascript
 class App extends Component {
@@ -59,7 +59,7 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Ciclo de Conferencias 2018</h1>
           </header>
-          <MainContainer />
+          <Routes />
         </div>
       </MuiThemeProvider>
     )
@@ -67,10 +67,10 @@ class App extends Component {
 }
 ```
 
-Y el MainContainer tiene las definiciones de las rutas: la grilla de charlas y ahora el login
+Y el archivo **routes.js** tiene las definiciones de las rutas: la grilla de charlas y ahora el login
 
 ```javascript
-export default class MainContainer extends Component {
+export default class Routes extends Component {
 
     render() {
         return (
