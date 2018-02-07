@@ -14,7 +14,6 @@ import { BrowserRouter } from "react-router-dom";
 class App extends Component {
   constructor() {
     super()
-    console.log("GENERANDO NUEVO STATE")
     this.state = {
       user: ''
     }

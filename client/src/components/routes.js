@@ -10,8 +10,6 @@ import Login from './login'
 
 class Routes extends Component {
 
-    // https://stackoverflow.com/questions/41679324/how-do-i-pass-parent-state-to-its-child-components
-
     render() {
         return (
             <div>

@@ -16,7 +16,7 @@ class CharlasAppBar extends Component {
         const initial = (this.props.username || ' ').substr(0, 1).toUpperCase()
 
         const chipUser = (this.props.username) ? 
-        <Chip style={{ margin: 'auto' }}>
+                <Chip style={{ margin: 'auto' }}>
                     <Avatar size={32}>{initial}</Avatar>
                     {this.props.username}
                 </Chip>

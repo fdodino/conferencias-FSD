@@ -7,16 +7,9 @@
 
 En esta iteración
 
-- vamos a hacer que la ventana de login guarde el usuario logueado. Esto va a formar parte del estado de nuestra aplicación por el momento, y lo pasaremos en la definición de la ruta y el mismo 
-- mostraremos los datos del usuario logueado en la AppBar. En principio el usuario 
-
-## Documentación para profundizar
-
--  https://medium.com/technoetics/create-basic-login-forms-using-create-react-app-module-in-reactjs-511b9790dede
--  https://serverless-stack.com/chapters/create-a-login-page.html
--  https://vladimirponomarev.com/blog/authentication-in-react-apps-creating-components
--  https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1
-
+- vamos a hacer que la ventana de login guarde el usuario logueado. Esto va a formar parte del estado de nuestra aplicación por el momento, y lo pasaremos en la definición de la ruta y los componentes. 
+- mostraremos los datos del usuario logueado en la AppBar. Mientras no se haya logueado nadie, quedará como usuario "anónimo" y una vez logueado mostrará un avatar con la inicial y el nombre del usuario. No tenemos validaciones para ingresar al sistema.
+- Además queremos que cuando el usuario ingrese al sistema se redirija automáticamente a la grilla de charlas. 
 
 ## Demo de esta iteración
 
@@ -27,44 +20,116 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ## Diagrama de arquitectura
 
-![](images/iteracion12.png)
+![](images/Iteracion13.png)
 
-Solo agregamos la app bar en TalkSearch.js y generamos la ventana de login bastante simple
+## Explicación del login
+
+En el archivo App.js definimos la función de Login, que modifica el estado de nuestra aplicación:
 
 ```javascript
-export default class Login extends Component {
+  login = (user) => {
+    this.setState({ user: user })
+    console.log("El usuario " + user + " ingreso al sistema")
+  }
+```
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            username: '',
-            password: ''
-        }
+Para poder publicar esa función, debemos exponerla en un mapa de props:
+
+```javascript
+  render() {
+    const childProps = {
+      user: this.state.user,
+      login: this.login
     }
+```
+
+En la definición del routing (archivo routes.js), reemplazamos el componente por un render específico donde pasamos los childProps, aprovechando [algunos consejos](https://stackoverflow.com/questions/41679324/how-do-i-pass-parent-state-to-its-child-components):
+
+```javascript
+  <Router>
+      <Switch>
+          <Route exact path='/' render={() => <TalksSearch childProps={this.props.childProps} />} />
+          <Route exact path='/login' render={() => <Login childProps={this.props.childProps} />} />
+      </Switch>
+  </Router>
+```
+
+Fíjense que al Route ya no le definimos el componente sino la propiedad render.
+
+En el login, recibimos como childProps la función y tenemos nuestra propia función login que
+
+- delega a la función login de App.js
+- pero además maneja la navegación hacia nuestro home, a partir de la variable history.
+
+```javascript
+class Login extends Component {
+
+    ...
+
+    login() {
+        this.props.childProps.login(this.state.username)
+        this.props.history.push('/')
+    }
+```
+
+Para poder usar la referencia **history**, debemos envolver nuestro componente Login en el **HOC (Higher-Order Component) withRouter**, que se encarga de inyectarle el historial de navegación. 
+
+```javascript
+export default withRouter(Login)
+```
+
+## Avatar del usuario
+
+Para incorporar el avatar del usuario, definimos un nuevo componente CharlasAppBar que reemplaza a la AppBar de React con Material UI. Este componente recibe
+
+- el título que corresponde a un caso de uso (title)
+- el nombre de usuario (username)
+
+```javascript
+class CharlasAppBar extends Component {
 
     render() {
+        const initial = (this.props.username || ' ').substr(0, 1).toUpperCase()
+
+        const chipUser = (this.props.username) ? 
+                <Chip style={{ margin: 'auto' }}>
+                    <Avatar size={32}>{initial}</Avatar>
+                    {this.props.username}
+                </Chip>
+                :
+                <Chip style={{ margin: 'auto' }}>
+                    <Avatar color="#444" icon={<SvgIconFace />} />
+                    Usuario anónimo
+                </Chip>
+            
         return (
-            <div>
-                <AppBar
-                    title="Login"
-                />
-                <TextField
-                    hintText="Ingrese su usuario"
-                    floatingLabelText="Usuario"
-                    onChange={(event, newValue) => this.setState({ username: newValue })}
-                />
-                <br />
-                <TextField
-                    type="password"
-                    hintText="Ingrese su clave"
-                    floatingLabelText="Clave"
-                    onChange={(event, newValue) => this.setState({ password: newValue })}
-                />
-                <br />
-                <RaisedButton label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)} />
-            </div>
+            <AppBar
+                title={this.props.title}
+            >
+            {chipUser}
+            </AppBar>
         )
     }
-
 }
 ```
+
+La referencia const chipUser se completa con un Chip de usuario anónimo (que utiliza un gráfico) o bien con el nombre del usuario, en cuyo caso se toma la inicial en mayúsculas (el operador || permite manejar los nulos en forma menos burocrática que con un if).
+
+Para pasarle la información, tanto el login como el talkSearch le pasan el título y el usuario (este último lo reciben del App):
+
+```javascript
+  <CharlasAppBar
+      title="Login"
+      username={this.props.user}
+  />
+```
+login.js
+
+```javascript
+  <CharlasAppBar
+      title="Grilla de charlas"
+      username={this.props.childProps.user}
+  />
+```
+talksSearch.js
+
