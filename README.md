@@ -3,16 +3,12 @@
 
 # Curso Full Stack Developer
 
-## 12° iteración: login
+## 13° iteración: login
 
-La pantalla de login ahora tendrá
+En esta iteración
 
-- una application bar, que también se agrega al caso de uso "Grilla de charlas" para poder orientar al usuario en qué lugar está ubicado
-- un texto para ingresar el usuario
-- otro texto para ingresar la clave
-- y un botón de submit
-
-La lógica del botón está incompleta (si presionan verán un mensaje de error), pero la pantalla de login ya tiene un estado. Cada vez que ingresa un caracter en el usuario o contraseña se genera un nuevo estado con la vista actualizada.
+- vamos a hacer que la ventana de login guarde el usuario logueado. Esto va a formar parte del estado de nuestra aplicación por el momento, y lo pasaremos en la definición de la ruta y el mismo 
+- mostraremos los datos del usuario logueado en la AppBar. En principio el usuario 
 
 ## Documentación para profundizar
 

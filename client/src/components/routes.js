@@ -1,23 +1,30 @@
 import React, { Component } from 'react'
 
 // Se agrega Login
+// Y un menú de opciones con links
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 // Casos de uso
-import Login from './login'
 import TalksSearch from './talksSearch'
+import Login from './login'
 
-export default class Routes extends Component {
+class Routes extends Component {
+
+    // https://stackoverflow.com/questions/41679324/how-do-i-pass-parent-state-to-its-child-components
 
     render() {
         return (
-            <Router>
-                <Switch>
-                    <Route exact path='/' component={TalksSearch} />
-                    <Route exact path='/login' component={Login} />
-                </Switch>
-            </Router>
+            <div>
+                <Router>
+                    <Switch>
+                        <Route exact path='/' render={() => <TalksSearch childProps={this.props.childProps} />} />
+                        <Route exact path='/login' render={() => <Login childProps={this.props.childProps} />} />
+                    </Switch>
+                </Router>
+            </div>
         )
     }
 
 }
+
+export default Routes

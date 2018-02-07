@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 // Main bar
-import AppBar from 'material-ui/AppBar'
+import CharlasAppBar from './charlasAppBar'
 
 // Material UI Components
 import TextField from 'material-ui/TextField'
@@ -33,8 +33,9 @@ export default class TalksSearch extends Component {
                 <ErrorMessage
                     message={this.state.errorMessage}
                 />
-                <AppBar
+                <CharlasAppBar
                     title="Grilla de charlas"
+                    username={this.props.childProps.user}
                 />
                 <TextField
                     value={ this.state.searchValue } 
