@@ -32,7 +32,7 @@ En el archivo App.js definimos el usuario en el estado:
   }
 ```
 
-la función de Login, que modifica el estado de nuestra aplicación:
+y la función de Login, que modifica el estado de nuestra aplicación:
 
 ```javascript
   login = (user) => {
@@ -51,7 +51,7 @@ Para poder publicar esa función, debemos exponerla en un mapa de props:
     }
 ```
 
-En la definición del routing (archivo routes.js), reemplazamos el componente por un render específico donde pasamos los childProps, aprovechando [algunos consejos](https://stackoverflow.com/questions/41679324/how-do-i-pass-parent-state-to-its-child-components):
+En la definición del routing (archivo routes.js), reemplazamos la propiedad _component_ por un _render_ específico donde pasamos los childProps, aprovechando [algunos consejos](https://stackoverflow.com/questions/41679324/how-do-i-pass-parent-state-to-its-child-components):
 
 ```javascript
   <Router>
@@ -131,7 +131,7 @@ Para pasarle la información, tanto el login como el talkSearch le pasan el tít
       username={this.props.user}
   />
 ```
-login.js
+_login.js_
 
 ```javascript
   <CharlasAppBar
@@ -139,5 +139,5 @@ login.js
       username={this.props.childProps.user}
   />
 ```
-talksSearch.js
+_talksSearch.js_
 
