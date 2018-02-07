@@ -7,7 +7,7 @@
 
 En esta iteración
 
-- vamos a hacer que la ventana de login guarde el usuario logueado. Esto va a formar parte del estado de nuestra aplicación por el momento, y lo pasaremos en la definición de la ruta y los componentes. 
+- queremos que al loguearse el usuario esto tenga algún efecto. Pero ese efecto debería trascender la propia página de login, entonces vamos a ubicar el usuario como parte del estado de nuestra aplicación. Por lo tanto habrá que pasar el usuario en la definición de la ruta y los componentes "hijos" de App. 
 - mostraremos los datos del usuario logueado en la AppBar. Mientras no se haya logueado nadie, quedará como usuario "anónimo" y una vez logueado mostrará un avatar con la inicial y el nombre del usuario. No tenemos validaciones para ingresar al sistema.
 - Además queremos que cuando el usuario ingrese al sistema se redirija automáticamente a la grilla de charlas. 
 
