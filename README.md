@@ -24,7 +24,15 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ## Explicación del login
 
-En el archivo App.js definimos la función de Login, que modifica el estado de nuestra aplicación:
+En el archivo App.js definimos el usuario en el estado:
+
+```javascript
+  state = {
+      user: ''
+  }
+```
+
+la función de Login, que modifica el estado de nuestra aplicación:
 
 ```javascript
   login = (user) => {
@@ -54,7 +62,7 @@ En la definición del routing (archivo routes.js), reemplazamos el componente po
   </Router>
 ```
 
-Fíjense que al Route ya no le definimos el componente sino la propiedad render.
+Fíjense que al Route ya no le definimos el componente sino la propiedad render, que es una función que no tiene parámetros y devuelve el componente correspondiente.
 
 En el login, recibimos como childProps la función y tenemos nuestra propia función login que
 

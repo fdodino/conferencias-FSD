@@ -12,11 +12,8 @@ import Routes from './components/routes'
 import { BrowserRouter } from "react-router-dom";
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
+  state = {
       user: ''
-    }
   }
 
   login = (user) => {
