@@ -31,7 +31,7 @@ Vemos cómo queda la aplicación en ReactJS:
 
 ## Diagrama de arquitectura
 
-![](images/iteracion12.png)
+![](images/Iteracion12.png)
 
 Solo agregamos la app bar en TalkSearch.js y generamos la ventana de login bastante simple
 
