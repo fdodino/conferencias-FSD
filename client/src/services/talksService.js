@@ -16,4 +16,8 @@ export default class TalksService {
         }
     }
 
+    findByUser(user) {
+        return fetch("/api/talks/" + user)
+    }
+
 }

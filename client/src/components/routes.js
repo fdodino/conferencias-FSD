@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 // Casos de uso
 import TalksSearch from './talksSearch'
 import Login from './login'
+import MyTalks from './myTalks'
 
 class Routes extends Component {
 
@@ -17,6 +18,7 @@ class Routes extends Component {
                     <Switch>
                         <Route exact path='/' render={() => <TalksSearch childProps={this.props.childProps} />} />
                         <Route exact path='/login' render={() => <Login childProps={this.props.childProps} />} />
+                        <Route exact path='/misCharlas' render={() => <MyTalks childProps={this.props.childProps} />} />
                     </Switch>
                 </Router>
             </div>

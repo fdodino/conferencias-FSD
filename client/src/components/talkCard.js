@@ -4,7 +4,7 @@ import './talkCard.css'
 
 // Material UI - Paper
 import Paper from 'material-ui/Paper'
-import {Toolbar, ToolbarTitle} from 'material-ui/Toolbar'
+import { Toolbar, ToolbarTitle } from 'material-ui/Toolbar'
 
 // Material UI - Chip
 import Avatar from 'material-ui/Avatar'
@@ -16,12 +16,12 @@ import Alarm from 'mui-icons/cmdi/alarm'
 export class TalkCard extends Component {
 
     render() {
-        if (this.props.talk === null) 
+        if (this.props.talk === null)
             return null
         return (
             <Paper rounded={true}>
                 <Toolbar>
-                    <ToolbarTitle text={this.props.talk.title} /> 
+                    <ToolbarTitle text={this.props.talk.title} />
                 </Toolbar>
                 <h2 className="author">{this.props.talk.author}</h2>
             </Paper>
@@ -43,14 +43,12 @@ export class RoomComponent extends Component {
 export class ScheduleComponent extends Component {
     render() {
         return (
-            <div align="center">
-                <Chip>
-                    <Avatar>
-                        <Alarm/>
-                    </Avatar>
-                    {this.props.schedule.from} - {this.props.schedule.to}
-                </Chip>
-            </div>
+            <Chip>
+                <Avatar>
+                    <Alarm />
+                </Avatar>
+                {this.props.schedule.from} - {this.props.schedule.to}
+            </Chip>
         )
     }
 }

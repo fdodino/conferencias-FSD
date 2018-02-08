@@ -21,43 +21,30 @@ export default class TalksList extends Component {
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false} className="header">
                     <TableRow key="header" displayBorder={false}>
-                        <TableHeaderColumn key="horarios" width="20%">
+                        <TableHeaderColumn key="charla" width="100%">
                             <div align="center">
-                                <h2 className="header">Horarios</h2>
+                                <h2 className="header">Charla</h2>
                             </div>
                         </TableHeaderColumn>
-                        {this.props.rooms.map(room =>
-                            <TableHeaderColumn key={room.name}>
-                                <RoomComponent room={room} key={room.name}/>
-                            </TableHeaderColumn>
-                        )}
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
-                {this.props.scheduleDTO.map((scheduleDTO, index) =>
-                    <TableRow key={index} displayBorder={false} className="row">
-                        <TableRowColumn width="20%">
-                            <ScheduleComponent schedule={scheduleDTO.schedule} key={scheduleDTO.schedule.from} />
-                        </TableRowColumn>
-                        <TalkColumns talks={scheduleDTO.talks} /> 
-                    </TableRow>
+                    {this.props.talks.map((talkDTO, index) =>
+                        <TableRow key={index} displayBorder={false} className="row">
+                            <TableRowColumn width="10%">
+                                    <RoomComponent room={talkDTO.room} key={talkDTO.room.name} />
+                                    <br/>
+                                    <ScheduleComponent schedule={talkDTO.schedule} key={talkDTO.schedule.from} />
+                            </TableRowColumn>
+                            <TableRowColumn width="90%">
+                                <TalkCard talk={talkDTO} key={index} />
+                            </TableRowColumn>
+                        </TableRow>
                     )
-                }
+                    }
                 </TableBody>
             </Table>
         )
     }
 
-}
-
-class TalkColumns extends Component {
-    render() {
-        return (
-            this.props.talks.map((talk, index) =>
-            <TableRowColumn key={index}>
-                <TalkCard talk={talk} key={index} />
-            </TableRowColumn>
-            )
-        )
-    }    
 }

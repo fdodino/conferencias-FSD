@@ -31,6 +31,7 @@ class Login extends Component {
                 <CharlasAppBar
                     title="Login"
                     username={this.props.user}
+                    page="login"
                 />
                 <TextField
                     hintText="Ingrese su usuario"

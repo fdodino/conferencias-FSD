@@ -7,7 +7,7 @@ import CharlasAppBar from './charlasAppBar'
 import TextField from 'material-ui/TextField'
 
 // Custom UI Components
-import TalksList from "./talksList"
+import TalksGrid from "./talksGrid"
 import ErrorMessage from "./errorMessage"
 
 // Custom Services
@@ -36,6 +36,7 @@ export default class TalksSearch extends Component {
                 <CharlasAppBar
                     title="Grilla de charlas"
                     username={this.props.childProps.user}
+                    page="grilla"
                 />
                 <TextField
                     value={ this.state.searchValue } 
@@ -43,7 +44,7 @@ export default class TalksSearch extends Component {
                     hintText="¿Qué charla le interesa?"
                     floatingLabelText="Valor a buscar..."
                 />
-                <TalksList rooms={this.state.rooms} scheduleDTO={this.state.scheduleDTO}/>
+                <TalksGrid rooms={this.state.rooms} scheduleDTO={this.state.scheduleDTO}/>
             </div>
         )
     }
