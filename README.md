@@ -3,13 +3,10 @@
 
 # Curso Full Stack Developer
 
-## 13° iteración: login
+## 14° iteración: caso de uso "Mis charlas"
 
-En esta iteración
+Nuestra intención es mostrar cómo podemos reutilizar componentes de ReactJS. Para eso el caso de uso "Mis charlas" mostrará las charlas que coincidan con el usuario logueado (para esta versión no nos interesa ser muy estrictos, basta con que esté incluido el nombre en el título o el expositor). Para ello aprovecharemos los componentes que muestran una charla, un horario y una sala.
 
-- queremos que al loguearse el usuario esto tenga algún efecto. Pero ese efecto debería trascender la propia página de login, entonces vamos a ubicar el usuario como parte del estado de nuestra aplicación. Por lo tanto habrá que pasar el usuario en la definición de la ruta y los componentes "hijos" de App. 
-- mostraremos los datos del usuario logueado en la AppBar. Mientras no se haya logueado nadie, quedará como usuario "anónimo" y una vez logueado mostrará un avatar con la inicial y el nombre del usuario. No tenemos validaciones para ingresar al sistema.
-- Además queremos que cuando el usuario ingrese al sistema se redirija automáticamente a la grilla de charlas. 
 
 ## Demo de esta iteración
 
@@ -18,126 +15,107 @@ Vemos cómo queda la aplicación en ReactJS:
 ![](images/demo.gif)
 
 
-## Diagrama de arquitectura
+## Menú de opciones nuevo
 
-![](images/Iteracion13.png)
+El componente CharlasAppBar ahora muestra un menú de opciones. 
 
-## Explicación del login
+- en el caso de estar logueado el usuario, debe mostrar el link a "Mis charlas"
+- en el caso de no estar logueado, debe mostrar el link a "Login"
+- en cualquiera de los otros casos, debe mostrar el link al home "Grilla de charlas"
 
-En el archivo App.js definimos el usuario en el estado:
+Todo esto debe ocurrir siempre y cuando no estemos ya en el caso de uso, para lo cual pasaremos al componente la propiedad _page_.
 
-```javascript
-  state = {
-      user: ''
-  }
-```
-
-y la función de Login, que modifica el estado de nuestra aplicación:
-
-```javascript
-  login = (user) => {
-    this.setState({ user: user })
-    console.log("El usuario " + user + " ingreso al sistema")
-  }
-```
-
-Para poder publicar esa función, debemos exponerla en un mapa de props:
-
-```javascript
-  render() {
-    const childProps = {
-      user: this.state.user,
-      login: this.login
-    }
-```
-
-En la definición del routing (archivo routes.js), reemplazamos la propiedad _component_ por un _render_ específico donde pasamos los childProps, aprovechando [algunos consejos](https://stackoverflow.com/questions/41679324/how-do-i-pass-parent-state-to-its-child-components):
-
-```javascript
-  <Router>
-      <Switch>
-          <Route exact path='/' render={() => <TalksSearch childProps={this.props.childProps} />} />
-          <Route exact path='/login' render={() => <Login childProps={this.props.childProps} />} />
-      </Switch>
-  </Router>
-```
-
-Fíjense que al Route ya no le definimos el componente sino la propiedad render, que es una función que no tiene parámetros y devuelve el componente correspondiente.
-
-En el login, recibimos como childProps la función y tenemos nuestra propia función login que
-
-- delega a la función login de App.js
-- pero además maneja la navegación hacia nuestro home, a partir de la variable history.
-
-```javascript
-class Login extends Component {
-
-    ...
-
-    login() {
-        this.props.childProps.login(this.state.username)
-        this.props.history.push('/')
-    }
-```
-
-Para poder usar la referencia **history**, debemos envolver nuestro componente Login en el **HOC (Higher-Order Component) withRouter**, que se encarga de inyectarle el historial de navegación. 
-
-```javascript
-export default withRouter(Login)
-```
-
-## Avatar del usuario
-
-Para incorporar el avatar del usuario, definimos un nuevo componente CharlasAppBar que reemplaza a la AppBar de React con Material UI. Este componente recibe
-
-- el título que corresponde a un caso de uso (title)
-- el nombre de usuario (username)
+Para evitar repetición de código, generamos una función específica que sabe mostrar un RaisedButton (el botón que permite ir hacia otro caso de uso) dependiendo de que no sea la página en la que ya estamos, y también de una condición que pasamos como parámetro (llamada _menuCondition_). Esta condición es un _closure_, una porción de código que se pasa como una función y que se aplica para devolver (o no) el link.
 
 ```javascript
 class CharlasAppBar extends Component {
 
-    render() {
-        const initial = (this.props.username || ' ').substr(0, 1).toUpperCase()
+    buildMenu(pageName, label, url, menuCondition) {
+        if (this.props.page !== pageName && menuCondition()) {
+            return <RaisedButton label={label} style={{ margin: 'auto' }} onClick={() => this.props.history.push(url)} default={true} />
+        }
+    }
 
-        const chipUser = (this.props.username) ? 
-                <Chip style={{ margin: 'auto' }}>
-                    <Avatar size={32}>{initial}</Avatar>
-                    {this.props.username}
-                </Chip>
-                :
-                <Chip style={{ margin: 'auto' }}>
-                    <Avatar color="#444" icon={<SvgIconFace />} />
-                    Usuario anónimo
-                </Chip>
-            
+    render() {
+        ...
+
         return (
             <AppBar
                 title={this.props.title}
             >
-            {chipUser}
+                {chipUser}
+                &nbsp;&nbsp;
+                {this.buildMenu('login', 'Login', '/login', () => !this.props.username)}
+                {this.buildMenu('misCharlas', 'Mis charlas', '/misCharlas', () => this.props.username)}
+                {this.buildMenu('grilla', 'Grilla', '/', () => true)}
             </AppBar>
         )
+```
+
+## Caso de uso Grilla de Charlas
+
+El componente que implementa la grilla de charlas se renombró a TalksGrid.
+
+## Caso de uso Mis charlas
+
+Creamos un nuevo componente MyTalks, que muestra la barra con el menú, dispara la búsqueda pasándole el usuario logueado y luego se lo pasa a otro componente nuevo: TalksList.
+
+
+## Lista de Mis Charlas
+
+La lista de "mis charlas" o TalksList recibe una lista de charlas (plana, no nos interesa aquí trabajarla como grilla) y muestra los elementos separándolos en dos columnas
+
+- a la izquierda, la sala y el horario (llamando a los componentes Room y Schedule, que ya está desarrollado)
+- a la derecha, la charla (llamando al componente TalkCard, que ya está desarrollado)
+
+```javascript
+export default class TalksList extends Component {
+
+    render() {
+        return (
+            <Table>
+                <TableHeader displaySelectAll={false} adjustForCheckbox={false} className="header">
+                    <TableRow key="header" displayBorder={false}>
+                        <TableHeaderColumn key="charla" width="100%">
+                            <div align="center">
+                                <h2 className="header">Charla</h2>
+                            </div>
+                        </TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                    {this.props.talks.map((talkDTO, index) =>
+                        <TableRow key={index} displayBorder={false} className="row">
+                            <TableRowColumn width="10%">
+                                    <RoomComponent room={talkDTO.room} key={talkDTO.room.name} />
+                                    <br/>
+                                    <ScheduleComponent schedule={talkDTO.schedule} key={talkDTO.schedule.from} />
+                            </TableRowColumn>
+                            <TableRowColumn width="90%">
+                                <TalkCard talk={talkDTO} key={index} />
+                            </TableRowColumn>
+                        </TableRow>
+                    )
+                    }
+                </TableBody>
+            </Table>
+        )
     }
+
 }
 ```
 
-La referencia const chipUser se completa con un Chip de usuario anónimo (que utiliza un gráfico) o bien con el nombre del usuario, en cuyo caso se toma la inicial en mayúsculas (el operador || permite manejar los nulos en forma menos burocrática que con un if).
+De esa manera rápidamente pudimos crear un nuevo caso de uso en base a componentes existentes.
 
-Para pasarle la información, tanto el login como el talkSearch le pasan el título y el usuario (este último lo reciben del App):
 
-```javascript
-  <CharlasAppBar
-      title="Login"
-      username={this.props.user}
-  />
-```
-_login.js_
+## Trabajo futuro
 
-```javascript
-  <CharlasAppBar
-      title="Grilla de charlas"
-      username={this.props.childProps.user}
-  />
-```
-_talksSearch.js_
+Tanto el login como el menú de opciones puede mejorarse. En particular recomendamos investigar [Passport](http://www.passportjs.org/), un middleware que permite autenticación contra Facebook, Google, LinkedIn, etc. del lado del server. 
+
+
+## Diagrama de arquitectura
+
+![](images/Iteracion14.png)
+
+
 
