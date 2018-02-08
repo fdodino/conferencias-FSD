@@ -27,7 +27,7 @@ Todo esto debe ocurrir siempre y cuando no estemos ya en el caso de uso, para lo
 
 Para evitar repetición de código, generamos una función específica que sabe mostrar un RaisedButton (el botón que permite ir hacia otro caso de uso) dependiendo de que no sea la página en la que ya estamos, y también de una condición que pasamos como parámetro (llamada _menuCondition_). Esta condición es un _closure_, una porción de código que se pasa como una función y que se aplica para devolver (o no) el link.
 
-```javascript
+```jsx
 class CharlasAppBar extends Component {
 
     buildMenu(pageName, label, url, menuCondition) {
