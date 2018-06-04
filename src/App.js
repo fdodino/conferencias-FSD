@@ -18,7 +18,6 @@ class App extends Component {
 
   
   render() {
-    
     const talksService = new TalksService()
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
