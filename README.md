@@ -82,7 +82,7 @@ La sintaxis .then().then().catch() permite encadenar pedidos asincrónicos o pro
 
 ## Proyecto NodeJS
 
-Nos bastamos en este proyecto _boilerplate_, que generamos a partir de una nueva carpeta _server_
+Nos basamos en este proyecto _boilerplate_, que generamos a partir de una nueva carpeta _server_
 
 https://github.com/developit/express-es6-rest-api
 
