@@ -21,7 +21,9 @@ class Login extends Component {
     }
 
     login() {
+        // invoca a la función de login que recibimos dentro de las childProps
         this.props.childProps.login(this.state.username)
+        // redirige a la página de charlas
         this.props.history.push('/')
     }
 
