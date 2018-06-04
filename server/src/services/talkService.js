@@ -87,6 +87,11 @@ export class TalkGridService {
         }
     }
 
+    // Genera una estructura
+    // primero por horario
+    // luego por sala
+    // Ej:  10 -> [ "Sala Verde" -> "JSON o XML?", "Sala Azul" -> "React o Angular?"] 
+    //      11 -> [ "Sala Azul" -> "Smalltalk vive" ]     
     buildTalksMap(searchValue) {
         const result = new Map()
         this.talkService.filter(searchValue).forEach((talk) => {
@@ -99,6 +104,12 @@ export class TalkGridService {
 }
 
 class ScheduleDTO {
+    // En base a la estructura de mapa abre un DTO que tiene
+    // - El horario
+    // - La lista de charlas
+    // Siguiendo el ejemplo de arriba quedaria
+    // { schedule: 10, talks: [ "Sala Verde" -> "JSON o XML?", "Sala Azul" -> "React o Angular?"]}
+    // { schedule: 11, talks: [ "Sala Verde" -> null, "Sala Azul" -> "Smalltalk vive"]}
     constructor(schedule, rooms, talksMap) {
         this.schedule = schedule
         this.talks = rooms.map((room) => {
