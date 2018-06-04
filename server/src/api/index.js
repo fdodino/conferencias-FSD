@@ -8,7 +8,6 @@ export default ({ config, db }) => {
 	let api = Router()
 
 	api.get('/talks', (req, res) => {
-		const searchValue = req.params.searchValue || ""
 		res.json(talkService.findAll())
 	}
 )
