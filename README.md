@@ -73,7 +73,7 @@ const db = {
 Y ahora sí podemos generar nuestro nuevo [initData](server/src/services/initData.js)
 
 ```bash
-$ node dist/services/itData.js
+$ node dist/services/initData.js
 Data initialization started
 . etc.
 ```
